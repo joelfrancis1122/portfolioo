@@ -40,7 +40,7 @@ export const Navbar = () => {
           transition={{ delay: 0.5 }}
           className="font-display text-lg"
         >
-          YN
+          JF
         </motion.a>
 
         {/* Nav links */}
@@ -68,7 +68,6 @@ export const Navbar = () => {
           transition={{ delay: 0.6 }}
           className="md:hidden text-sm uppercase tracking-widest"
         >
-          Menu
         </motion.button>
       </div>
     </motion.nav>
