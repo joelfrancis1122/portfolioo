@@ -229,7 +229,7 @@ export const Work = () => (
         <span className="text-[10px] tracking-[0.3em] uppercase text-stone-400 block mb-6 font-light">
           Selected Work
         </span>
-        <h2 className="text-7xl lg:text-8xl font-light tracking-tight text-stone-900 leading-[1.1]">
+        <h2 className="text-6xl lg:text-8xl font-light tracking-tight text-stone-900 leading-[1.1]">
           Projects
         </h2>
         <p className="mt-8 text-lg text-stone-600 font-light max-w-2xl leading-relaxed">
