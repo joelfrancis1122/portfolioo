@@ -1,6 +1,118 @@
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
-import { ArrowDown, Sparkles } from "lucide-react";
+import { ArrowDown } from "lucide-react";
+
+// Dotted Glow Background Component (Aceternity UI)
+const DottedGlowBackground = ({
+  className = "",
+  gap = 12,
+  radius = 2,
+  color = "rgba(120, 113, 108, 0.4)", // warm stone color
+  glowColor = "rgba(168, 162, 158, 0.5)", // warm glow
+  opacity = 0.6,
+  speedMin = 0.4,
+  speedMax = 1.3,
+}: {
+  className?: string;
+  gap?: number;
+  radius?: number;
+  color?: string;
+  glowColor?: string;
+  opacity?: number;
+  speedMin?: number;
+  speedMax?: number;
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let dots: Array<{
+      x: number;
+      y: number;
+      phase: number;
+      speed: number;
+    }> = [];
+
+    const resizeCanvas = () => {
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      
+      canvas.width = parent.offsetWidth * window.devicePixelRatio;
+      canvas.height = parent.offsetHeight * window.devicePixelRatio;
+      canvas.style.width = `${parent.offsetWidth}px`;
+      canvas.style.height = `${parent.offsetHeight}px`;
+      
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      
+      // Initialize dots
+      dots = [];
+      const cols = Math.ceil(parent.offsetWidth / gap);
+      const rows = Math.ceil(parent.offsetHeight / gap);
+      
+      for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+          dots.push({
+            x: i * gap,
+            y: j * gap,
+            phase: Math.random() * Math.PI * 2,
+            speed: speedMin + Math.random() * (speedMax - speedMin),
+          });
+        }
+      }
+    };
+
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    const animate = (time: number) => {
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      
+      ctx.clearRect(0, 0, parent.offsetWidth, parent.offsetHeight);
+
+      dots.forEach((dot) => {
+        const alpha = 0.3 + Math.sin(dot.phase + time * 0.001 * dot.speed) * 0.3;
+        const size = radius + Math.sin(dot.phase + time * 0.001 * dot.speed) * radius * 0.5;
+        
+        // Draw glow
+        if (alpha > 0.5) {
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = glowColor;
+        } else {
+          ctx.shadowBlur = 0;
+        }
+        
+        ctx.fillStyle = color.replace(/[\d.]+\)$/g, `${alpha})`);
+        ctx.beginPath();
+        ctx.arc(dot.x, dot.y, size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animate(0);
+
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [gap, radius, color, glowColor, speedMin, speedMax]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className={`absolute inset-0 pointer-events-none w-full h-full ${className}`}
+      style={{ opacity, width: '100%', height: '100%' }}
+    />
+  );
+};
 
 // Spotlight Component (Aceternity UI)
 const Spotlight = ({ 
@@ -88,34 +200,8 @@ const TextReveal = ({
   );
 };
 
-// Animated Background Grid
-const BackgroundGrid = () => {
-  return (
-    <div className="absolute inset-0 overflow-hidden">
-      {/* Subtle grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e7e5e410_1px,transparent_1px),linear-gradient(to_bottom,#e7e5e410_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
-      
-      {/* Noise texture overlay */}
-      <div className="absolute inset-0 opacity-[0.015] mix-blend-soft-light">
-        <svg className="w-full h-full">
-          <filter id="noiseFilter">
-            <feTurbulence 
-              type="fractalNoise" 
-              baseFrequency="0.80" 
-              numOctaves="4" 
-              stitchTiles="stitch"
-            />
-          </filter>
-          <rect width="100%" height="100%" filter="url(#noiseFilter)" />
-        </svg>
-      </div>
-    </div>
-  );
-};
-
 // Mouse follower effect (subtle)
 const MouseFollower = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const cursorX = useMotionValue(0);
   const cursorY = useMotionValue(0);
   
@@ -159,8 +245,18 @@ export const Hero = () => {
       ref={containerRef}
       className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden bg-[#faf9f7]"
     >
-      {/* Background Effects */}
-      <BackgroundGrid />
+      {/* Dotted Glow Background */}
+      <DottedGlowBackground 
+        gap={16}
+        radius={1.5}
+        color="rgba(120, 113, 108, 0.3)"
+        glowColor="rgba(168, 162, 158, 0.4)"
+        opacity={0.5}
+        speedMin={0.3}
+        speedMax={0.8}
+      />
+
+      {/* Mouse Follower */}
       <MouseFollower />
       
       {/* Spotlight Effect */}
