@@ -40,7 +40,7 @@ export const About = () => {
           >
 <div className="flex items-baseline gap-6">
 
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-display mb-8">
+            <h2 className="lg:text-6xl font-display mb-8 px-5 sm:px-8 md:px-0 text-xl md:text-2xl">
          About
             </h2>
             <span className="text-md  tracking-[0.3em] text-whites block mb-6">
@@ -57,17 +57,18 @@ export const About = () => {
   transition={{ duration: 0.8, delay: 0.1 }}
   className="max-w-4xl"
 >
-  <p className="text-xl md:text-2xl lg:text-3xl font-light leading-relaxed text-white">
-    <span className="font-medium">Joel Francis</span>{" "}
-    <span className="pronoun">(HE/HIM)</span>{" "}
-    is a Full Stack Developer specializing in MERN stack with a focus on building
-    complete, production-ready applications. From authentication systems to
-    payment integrations, I handle the full spectrum.
-  </p>
+<p className="px-5 sm:px-8 md:px-0 text-xl md:text-2xl lg:text-3xl font-light leading-relaxed text-white">
+  <span className="font-medium">Joel Francis</span>{" "}
+  <span className="pronoun">(HE/HIM)</span>{" "}
+  is a Full Stack Developer specializing in MERN stack with a focus on building
+  complete, production-ready applications. From authentication systems to
+  payment integrations, I handle the full spectrum.
+</p>
+
 </motion.div>
 
           {/* Thinking traits */}
-          <div className="grid md:grid-cols-3 gap-8 pt-8">
+          <div className="grid md:grid-cols-3 gap-8 pt-8 px-5 sm:px-8 md:px-0 text-xl md:text-2xl">
             {traits.map((trait, index) => (
               <motion.div
                 key={trait.title}
