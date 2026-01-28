@@ -71,6 +71,30 @@ const miniProjects = [
   },
 ];
 
+// Meteors Component (Aceternity UI)
+const Meteors = ({ number = 20 }: { number?: number }) => {
+  const meteors = new Array(number).fill(true);
+  
+  return (
+    <>
+      {meteors.map((_, idx) => (
+        <span
+          key={idx}
+          className="absolute top-1/2 left-1/2 h-0.5 w-0.5 rotate-[215deg] animate-meteor-effect rounded-[9999px] bg-stone-400 shadow-[0_0_0_1px_#a8a29e40]"
+          style={{
+            top: Math.floor(Math.random() * 100) + "%",
+            left: Math.floor(Math.random() * 100) + "%",
+            animationDelay: Math.random() * 0.6 + 0.2 + "s",
+            animationDuration: Math.floor(Math.random() * 8 + 6) + "s",
+          }}
+        >
+          <div className="absolute top-1/2 h-[1px] w-[50px] -translate-y-1/2 bg-gradient-to-r from-stone-400 to-transparent" />
+        </span>
+      ))}
+    </>
+  );
+};
+
 // Subtle 3D Tilt Card - Only on hover, minimal performance impact
 const TiltCard = ({ children, className }: { children: React.ReactNode; className?: string }) => {
   const [transform, setTransform] = useState("");
@@ -82,7 +106,7 @@ const TiltCard = ({ children, className }: { children: React.ReactNode; classNam
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -3; // Reduced from 10 to 3
+    const rotateX = ((y - centerY) / centerY) * -3;
     const rotateY = ((x - centerX) / centerX) * 3;
 
     setTransform(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`);
@@ -115,7 +139,6 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
     offset: ["start end", "end start"],
   });
 
-  // Subtle parallax - reduced range for performance
   const imageY = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
   return (
@@ -131,14 +154,13 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
         {/* Image Side */}
         <TiltCard className="relative group">
           <motion.div style={{ y: imageY }} className="relative">
-            {/* Simple shadow on hover */}
             <div className="absolute -inset-4 bg-stone-200/40 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
             
             <div className="relative aspect-[4/3] bg-stone-100 rounded-2xl overflow-hidden">
               <img
                 src={project.image}
                 alt={project.title}
-  className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
           </motion.div>
@@ -276,26 +298,52 @@ export const Work = () => (
                 delay: idx * 0.1,
                 ease: [0.23, 1, 0.32, 1]
               }}
-              className="group block p-8 bg-white rounded-2xl border border-stone-200 hover:border-stone-300 hover:shadow-xl hover:shadow-stone-200/50 transition-all duration-500"
+              className="group relative block p-8 bg-white rounded-2xl border border-stone-200 hover:border-stone-300 hover:shadow-xl hover:shadow-stone-200/50 transition-all duration-500 overflow-hidden"
             >
-              <div className="flex items-start justify-between mb-4">
-                <h4 className="text-xl font-light text-stone-900 group-hover:text-stone-700 transition-colors">
-                  {p.title}
-                </h4>
-                <ArrowUpRight className="w-5 h-5 text-stone-400 group-hover:text-stone-600 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" />
+              {/* Meteors Effect */}
+              <Meteors number={15} />
+              
+              <div className="relative z-10">
+                <div className="flex items-start justify-between mb-4">
+                  <h4 className="text-xl font-light text-stone-900 group-hover:text-stone-700 transition-colors">
+                    {p.title}
+                  </h4>
+                  <ArrowUpRight className="w-5 h-5 text-stone-400 group-hover:text-stone-600 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" />
+                </div>
+                
+                <p className="text-sm text-stone-600 font-light mb-5 leading-relaxed">
+                  {p.description}
+                </p>
+                
+                <span className="text-[9px] tracking-[0.15em] uppercase text-stone-400 font-light">
+                  {p.tech}
+                </span>
               </div>
-              
-              <p className="text-sm text-stone-600 font-light mb-5 leading-relaxed">
-                {p.description}
-              </p>
-              
-              <span className="text-[9px] tracking-[0.15em] uppercase text-stone-400 font-light">
-                {p.tech}
-              </span>
             </motion.a>
           ))}
         </div>
       </motion.div>
     </div>
+
+    {/* Add Meteor Animation */}
+    <style>{`
+      @keyframes meteor {
+        0% {
+          transform: rotate(215deg) translateX(0);
+          opacity: 1;
+        }
+        70% {
+          opacity: 1;
+        }
+        100% {
+          transform: rotate(215deg) translateX(-500px);
+          opacity: 0;
+        }
+      }
+      
+      .animate-meteor-effect {
+        animation: meteor 5s linear infinite;
+      }
+    `}</style>
   </section>
 );
