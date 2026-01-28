@@ -34,7 +34,7 @@ export const Contact = () => {
 
           {/* Email CTA */}
           <motion.a
-            href="mailto:your.email@example.com"
+            href="mailto:joelfrancis9398@gmail.com"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
