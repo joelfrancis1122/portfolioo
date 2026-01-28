@@ -289,7 +289,7 @@ export const Hero = () => {
             <span className="relative inline-flex rounded-full h-2 w-2 bg-stone-500"></span>
           </span>
           <span className="text-[10px] uppercase tracking-[0.3em] text-stone-500 font-light">
-            Available for new opportunities
+            {/* Available for new opportunities */}
           </span>
         </motion.div>
 
